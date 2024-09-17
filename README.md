@@ -170,3 +170,15 @@ Fungsi ini menampilkan data berdasarkan ID. Sama seperti sebelumnya, fungsi show
     ...
 path ini bertujuan supaya user bisa mengakses fungsi-fungsi views melalui url yang sudah didefinisikan.
 - Selanjutnya, saya melakukan git push dan push ke pws untuk menyimpan hasil pekerjaan saya.
+
+# Hasil akses URL dalam format XML
+![alt text](image-1.png)
+
+# Hasil akses URL dalam format JSON
+![alt text](image.png)
+
+# Hasil akses URL dalam format XML by ID
+![alt text](image-2.png)
+
+# Hasil akses URL dalam format JSON by ID
+![alt text](image-3.png)
