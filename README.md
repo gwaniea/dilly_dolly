@@ -182,3 +182,90 @@ path ini bertujuan supaya user bisa mengakses fungsi-fungsi views melalui url ya
 
 # Hasil akses URL dalam format JSON by ID
 ![alt text](image-3.png)
+
+# Tugas 4
+
+1. Apa perbedaan antara HttpResponseRedirect() dan redirect()
+HttpResponseRedirect():
+- Harus diimport dari django.http dan dibuat dengan cara manual, yaitu membuat object HttpResponseRedirect() dengan url yang dibuat dengan menggunakan reverse()
+- Perlu menggunakan reverse() untuk membuat url berdasarkan nama tampilannya di urls.py
+- Untuk menggunakan fungsi ini, diperlukan kode yang lebih kompleks dari redirect()
+
+redirect():
+- Harus diimport dari django.shortcuts dan merupakan fungsi shortcut. Fungsi ini lebih sederhana dari HttpResponseRedirect()
+- Tidak perlu menggunakan reverse() secara eksplisit karena sudah otomatis dikonversi oleh fungsi ini ke url yang sesuai
+- Kode lebih efisien, ringkas, dan mudah dibaca
+
+2.  Jelaskan cara kerja penghubungan model Product dengan User!
+Hubungan model Product dengan User contohnya adalah produk yang diunggah oleh user tertentu. Dalam proyek ini, info yang kita masukan ke database ketika ingin create new product entry dapat berbeda dengan user lain dan produk-produk ini dihubungkan sesuai user yang mengunggah informasi tersebut. Menghubungkan model Product dengan User biasanya dilakukan menggunakan ForeignKey atau ManyToManyField. Misalnya, jika ingin setiap produk dikaitkan dengan seorang user, kita bisa mendefinisikan ForeignKey di model Product. Contohnya, dalam proyek ini, di models.py terdapat baris kode yang berisi :
+
+user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+ForeignKey digunakan untuk menghubungkan setiap instance Product dengan satu User, tetapi setiap User dapat memiliki banyak Product. on_delete=models.CASCADE berarti, jika user dihapus, semua produk yang terkait dengan user tersebut juga akan dihapus.
+
+3. Apa perbedaan antara authentication dan authorization, apakah yang dilakukan saat user login? Jelaskan bagaimana Django mengimplementasikan kedua konsep tersebut.
+Authentication:
+Proses verifikasi identitas user yang login, contohnya memeriksa apakah username dan password yang dimasukkan user valid. Autentikasi akan meminta informasi user, seperti username dan password, dan mengecek apakah kombinasi informasi tersebut (username dan password) cocok dengan data yang ada.
+
+Authorization:
+Proses menentukan izin yang dimiliki user setelah mereka terverifikasi saat login, yaitu apa yang boleh dan tidak boleh dilakukan oleh user dalam aplikasi. Authorization akan memeriksa apakah user memiliki izin untuk mengakses fitur tertentu, halaman tertentu, mengubah data, dan lainnya. Misalnya, setelah mahasiswa login di scele, mahasiswa akan diberikan hak akses yang berbeda dengan dosen, salah satu contohnya mahasiswa hanya bisa mengecek nilainya masing-masing, sedangkan dosen bisa mengecek seluruh nilai mahasiswa dan melakukan perubahan terhadap nilai mahasiswa.
+
+Yang terjadi ketika user login:
+- Ketika user login, proses authentication dilakukan untuk memverifikasi user yang login.
+- Setelah verifikasi berhasil, proses authorization akan dilakukan untuk menentukan apa saja yang boleh diakses atau dilakukan oleh user tersebut berdasarkan role mereka.
+
+Implementasi di Django:
+Authentication:
+- Django menyediakan sistem autentikasi bawaan, seperti sistem login, logout, pendaftaran, dan pengelolaan sesi.
+- Fungsi authenticate() digunakan untuk memverifikasi kredensial user (username dan password) dan mengembalikan objek User jika valid serta None jika tidak valid.
+- Setelah user terautentikasi, fungsi ini digunakan untuk membuat sesi login user sehingga, ketika user melakukan request, Django akan mengenali user tersebut dalam sesi login yang sama.
+
+Authorization:
+- Django menentukan apa saja yang boleh dilakukan oleh user. Decorators: @login_required akan memastikan bahwa hanya user yang sudah login yang dapat mengakses view tertentu. @permission_required dapat digunakan untuk membatasi akses berdasarkan izin khusus. Contohnya, dalam views.py, decorator @login_required memastikan bahwa hanya user yang sudah login yang bisa mengakses view show_main. Jika user belum login, maka akan diarahkan ke halaman login (login_url='/login'). Ini adalah salah satu bentuk authorization karena membatasi akses user berdasarkan status autentikasi user.
+
+4. Bagaimana Django mengingat user yang telah login? Jelaskan kegunaan lain dari cookies dan apakah semua cookies aman digunakan?
+Untuk mengingat user yang telah login, Django menggunakan cookies dan session. Cookie adalah kumpulan informasi yang berisi rekam jejak dan aktivitas ketika menelusuri sebuah web. Saat user berhasil login, Django membuat cookie dan menyimpannya di browser user. Cookie ini berisi session id (bukan id user) yang sudah terenkripsi dan unik yang menghubungkan user dengan session data yang disimpan di server. Setiap kali user mengirimkan request ke server, browser mengirimkan session cookie ini bersama request. Django akan menggunakan session id dari cookie tersebut untuk mengambil informasi user yang tersimpan di server dan mengenali user yang sedang login.
+
+Kegunaan lain dari Cookies:
+- Cookies bisa menyimpan data preferensi user, seperti preferensi bahasa atau pengaturan tampilan.
+- Cookies dapat digunakan untuk menganalisis perilaku user untuk meningkatkan kinerja web/aplikasi.
+- Cookies sering digunakan untuk menampilkan iklan berdasarkan riwayat pencarian di browser mereka.
+
+Tidak semua cookies aman digunakan sebab:
+- Cookies yang dikirimkan melalui koneksi http (http cookies) tidak aman karena dapat di-hack atau diakses dengan mudah oleh pihak ketiga.
+- Risiko serangan XSS (Cross-Site Scripting), yaitu hacker dapat menyisipkan skrip berbahaya yang bisa mengakses cookies user.
+
+5. Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
+1) Mengimplementasikan fungsi registrasi, login, dan logout untuk memungkinkan user untuk mengakses aplikasi sebelumnya dengan lancar.
+
+Registrasi:
+Pertama, saya memastikan bahwa env telah aktif sebelum menambahkan import UserCreationForm dan messages pada views.py di subdirektori main. Kemudian, saya menambahkan fungsi register untuk membuat formulir registrasi secara otomatis dan menghasilkan akun user ketika data di-submit dari form. Setelah itu, saya membuat register.html pada templates di main yang fungsinya adalah sebagai tampilan untuk pendaftaran akun baru bagi user yang belum punya akun. Selanjutnya, saya import fungsi register tadi di urls.py dan saya tambahkan path url register di urlpatterns agar fungsi tersebut bisa diakses.
+
+login:
+Pertama, saya import authenticate, login, dan AuthenticationForm pada views.py di subdirektori main. Kemudian, saya membuat fungsi login_user di views.py untuk mengautentikasi user yang ingin login dan membuat session untuk user yang berhasil login. Setelah itu, saya membuat login.html pada templates di main yang fungsinya adalah sebagai tampilan bagi user yang ingin login ke akun mereka. Selanjutnya, saya import fungsi login_user tadi di urls.py dan saya tambahkan path url login_user di urlpatterns agar fungsi tersebut bisa diakses.
+
+logout:
+Pertama, saya import logout pada views.py di subdirektori main. Kemudian, saya menambahkan fungsi logout_user di views.py untuk melakukan mekanisme logout. Setelah itu, saya menambahkan tombol logout di main.html sehingga user yang menekan tombol logout yang ada di laman main (show_main) ini akan keluar dari akunnya (logout). Selanjutnya, saya import fungsi logout_user tadi di urls.py dan saya tambahkan path url logout_user di urlpatterns agar fungsi tersebut bisa diakses. 
+
+2) Membuat dua akun user dengan masing-masing tiga dummy data menggunakan model yang telah dibuat pada aplikasi sebelumnya untuk setiap akun di lokal.
+
+3) Menghubungkan model Product dengan User.
+Pertama, saya import login_required pada views.py di subdirektori main. Setelah itu, saya menambahkan potongan kode @login_required(login_url='/login') di atas fungsi show_main pada file yang sama. Fungsinya adalah user harus login terlebih dahulu untuk mengakses laman main.html.
+
+Selanjutnya, saya import User pada models.py di subdirektori main. Pada Product, saya menambahkan user = models.ForeignKey(User, on_delete=models.CASCADE) untuk menghubungkan satu Product dengan satu user. Kemudian, saya mengubah fungsi create_product_entry dengan :
+
+ if form.is_valid() and request.method == "POST":
+    mood_entry = form.save(commit=False)
+    mood_entry.user = request.user
+    mood_entry.save()
+    return redirect('main:show_main')
+
+Fungsinya adalah agar data yang dimasukkan oleh user dikaitkan dulu dengan user tersebut sebelum dimasukkan ke database. Kemudian, saya mengubah value dari mood_entries dan context pada fungsi show_main menjadi product_entries = Product.objects.filter(user=request.user) agar web hanya menampilkan product yang terkait dengan user yang sedang login. Setelah itu, saya make migrations dan migrate model. Selanjutnya, saya import os dan ganti variabel DEBUG pada settings.py menjadi :
+
+PRODUCTION = os.getenv("PRODUCTION", False)
+DEBUG = not PRODUCTION
+
+4) Menampilkan detail informasi user yang sedang logged in seperti username dan menerapkan cookies seperti last login pada halaman utama aplikasi.
+Pertama, saya meng-import HttpResponseRedirect, reverse, dan datetime pada views.py di subdirektori main. Pada fungsi login_user, saya menambahkan cookie yang bernama last_login untuk melihat kapan terakhir kali user melakukan login. Kemudian, pada fungsi show_main, saya menambahkan potongan kode 'last_login': request.COOKIES['last_login'] ke dalam variabel context. Selanjutnya, saya membuat tampilan sesi terakhir login di main.html yang akan menampilkan data last_login. Setelah itu, saya ubah fungsi logout_user dengan menambahkan baris kode untuk menghapus cookie saat user logout.
+
+Intinya, ketika user login, sistem mencatat waktu login terakhir dengan menambahkan cookie last_login. Informasi last_login akan ditampilkan di main.html untuk menunjukkan kapan user terakhir kali login. Saat user logout, cookie last_login dihapus.
