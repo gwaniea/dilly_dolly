@@ -269,3 +269,49 @@ DEBUG = not PRODUCTION
 Pertama, saya meng-import HttpResponseRedirect, reverse, dan datetime pada views.py di subdirektori main. Pada fungsi login_user, saya menambahkan cookie yang bernama last_login untuk melihat kapan terakhir kali user melakukan login. Kemudian, pada fungsi show_main, saya menambahkan potongan kode 'last_login': request.COOKIES['last_login'] ke dalam variabel context. Selanjutnya, saya membuat tampilan sesi terakhir login di main.html yang akan menampilkan data last_login. Setelah itu, saya ubah fungsi logout_user dengan menambahkan baris kode untuk menghapus cookie saat user logout.
 
 Intinya, ketika user login, sistem mencatat waktu login terakhir dengan menambahkan cookie last_login. Informasi last_login akan ditampilkan di main.html untuk menunjukkan kapan user terakhir kali login. Saat user logout, cookie last_login dihapus.
+
+# Tugas 5
+1. Urutan Prioritas Pengambilan CSS Selector
+Ketika terdapat beberapa CSS selector, urutan prioritas dari CSS menentukan gaya mana yang akan digunakan adalah sebagai berikut:
+1. Inline styles
+Gaya yang didefinisikan langsung pada elemen HTML menggunakan atribut style memiliki prioritas tertinggi. Contohnya <h1 style="color: red;">Judul</h1>.
+2. External dan internal style sheets
+Gaya yang didefinisikan dalam file eksternal CSS atau di dalam tag style di bagian head dari dokumen HTML memiliki prioritas kedua tertinggi. Contohnya:
+External stylesheets: link rel="stylesheet" href="style.css"
+Internal stylesheets: <style>h1 { color: blue; }</style>
+3. Browser default
+Gaya default yang diterapkan oleh browser jika tidak ada gaya khusus yang didefinisikan oleh developer.
+
+2. Mengapa Responsive Design Penting dalam Pengembangan Aplikasi Web? Responsive design penting karena website dapat menyesuaikan ukuran layar dari device yang mengakses website. Misalnya, tampilan suatu website saat pengguna mengaksesnya menggunakan komputer akan sedikit berbeda dengan tampilan di mobile karena website menyesuaikan layar device yang digunakan sehingga memberikan pengalaman yang optimal bagi pengguna.
+
+Contoh aplikasi yang menerapkan responsive design:
+- Twitter
+- Shopee
+- Youtube
+Contoh aplikasi yang belum menerapkan responsive design:
+Website lama atau aplikasi yang hanya didesain untuk desktop sehingga terlihat berantakan dan sulit digunakan di layar kecil seperti ponsel.
+
+3. Perbedaan antara Margin, Border, dan Padding:
+- Margin: Ruang kosong di luar eleme yang memisahkan elemen dari elemen lain di sekitarnya. Contoh implementasi di Tailwind: m-4 (semua sisi), mt-4 (margin atas), mb-4 (margin bawah), ml-4 (margin kiri), mr-4 (margin kanan), dan lainnya.
+- Border: Garis yang mengelilingi konten dan padding dari elemen. Contoh implementasi di Tailwind: border-2 (untuk border dengan ketebalan tertentu), border-red-500 (menambahkan warna).
+- Padding: Ruang antara konten elemen dan border elemen tersebut. Contoh implementasi di Tailwind: p-4 (semua sisi), pt-4 (padding atas), pb-4 (padding bawah), pl-4 (padding kiri), pr-4 (padding kanan).
+
+4. Konsep Flexbox dan Grid Layout serta Kegunaannya:
+Flexbox (Flexible Box Layout) adalah metode tata letak CSS yang dirancang untuk menyusun elemen secara fleksibel di dalam sebuah kontainer, khususnya ketika ingin menata elemen dalam baris atau kolom dan mengontrol bagaimana elemen tersebut mengisi ruang.
+
+Kegunaan Flexbox:
+- Menyusun elemen dalam satu baris atau kolom.
+- Memudahkan pembagian ruang antar elemen sebab elemen dengan otomatis mengisi ruang yang tersisa.
+
+Grid Layout adalah sistem layout  untuk mengatur tata letak dua dimensi (baris dan kolom). Berbeda dengan Flexbox, Grid Layout dapat mengatur elemen dalam grid yang terdiri dari baris dan kolom secara bersamaan.
+
+Kegunaan:
+- Cocok untuk tata letak halaman yang lebih rumit dengan beberapa baris dan kolom.
+- Mudah menentukan ukuran setiap baris dan kolom dan mengatur elemen agar mengisi kolom atau baris.
+
+5. Penjelasan step by step
+1) Implementasikan fungsi untuk menghapus dan mengedit product.
+Pertama, pada views.py yang ada pada subdirektori main, saya buat fungsi baru berdama edit_product yang menerima parameter request dan id. Lalu, saya membuat berkas html baru dengan nama edit_product.html pada subdirektori main/templates. Kemudian saya daftarkan fungsi tersebut di urls.py agar dapat diakses oleh pengguna. Saya menambahkan elemen button di file html yang ketika diklik akan diteruskan ke fungsi view edit_product. Hal yang sama juga saya lakukan untuk membuat fitur delete_product.
+
+2) Kustomisasi desain pada template HTML yang telah dibuat pada tugas-tugas sebelumnya menggunakan CSS atau CSS framework (seperti Bootstrap, Tailwind, Bulma)
+Saya mulai kustomisasi dari halaman login dan register, kemudian main.html yang terdapat info product, user, dan navbar. Kemudian fitur edit dan delete product. Saya menggunakan Tailwind untuk kustomisasi dan saya juga menonton video di youtube terkait cara membuat laman login dan register yang menarik. Pada card info, saya mengganti warna dan menambahkan transition shadow ketika card di-hover, lalu saya juga menambahkan gambar dummy untuk profile user. Pada card product, saya membuat sedikit perubahan dengan menambahkan gambar dummy yang ketika di-hover akan zoom in, saya juga mengubah warna elemen-elemen di website. Jika pada aplikasi belum ada product yang tersimpan, halaman daftar product akan menampilkan gambar dan pesan bahwa belum ada product yang terdaftar. Saya juga membuat dua tombol untuk mengedit dan menghapus product. Selain itu, saya membuat navigation bar yang responsive terhadap perbedaan ukuran device. Pada versi mobile, ketika icon hamburger diklik maka akan muncul tombol untuk logout bagi pengguna, tetapi pada versi desktop, tombol logout langsung terlihat di ujung kanan layar.
