@@ -3,11 +3,24 @@ from main.models import Product
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.contrib.auth.models import User
+from django.utils.html import strip_tags
 
 class ProductForm(ModelForm):
     class Meta:
         model = Product
         fields = ["name", "price", "description", "category", "stock"]
+
+    def clean_name(self):
+        mood = self.cleaned_data["name"]
+        return strip_tags(mood)
+
+    def clean_description(self):
+        feelings = self.cleaned_data["description"]
+        return strip_tags(feelings)
+    
+    def clean_category(self):
+        mood = self.cleaned_data["category"]
+        return strip_tags(mood)
 
 class CustomUserCreationForm(UserCreationForm):
     password1 = forms.CharField(

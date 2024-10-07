@@ -315,3 +315,41 @@ Pertama, pada views.py yang ada pada subdirektori main, saya buat fungsi baru be
 
 2) Kustomisasi desain pada template HTML yang telah dibuat pada tugas-tugas sebelumnya menggunakan CSS atau CSS framework (seperti Bootstrap, Tailwind, Bulma)
 Saya mulai kustomisasi dari halaman login dan register, kemudian main.html yang terdapat info product, user, dan navbar. Kemudian fitur edit dan delete product. Saya menggunakan Tailwind untuk kustomisasi dan saya juga menonton video di youtube terkait cara membuat laman login dan register yang menarik. Pada card info, saya mengganti warna dan menambahkan transition shadow ketika card di-hover, lalu saya juga menambahkan gambar dummy untuk profile user. Pada card product, saya membuat sedikit perubahan dengan menambahkan gambar dummy yang ketika di-hover akan zoom in, saya juga mengubah warna elemen-elemen di website. Jika pada aplikasi belum ada product yang tersimpan, halaman daftar product akan menampilkan gambar dan pesan bahwa belum ada product yang terdaftar. Saya juga membuat dua tombol untuk mengedit dan menghapus product. Selain itu, saya membuat navigation bar yang responsive terhadap perbedaan ukuran device. Pada versi mobile, ketika icon hamburger diklik maka akan muncul tombol untuk logout bagi pengguna, tetapi pada versi desktop, tombol logout langsung terlihat di ujung kanan layar.
+
+# Tugas 6
+1. Jelaskan manfaat dari penggunaan JavaScript dalam pengembangan aplikasi web!
+JavaScript meningkatkan fleksibilitas dalam membuat web yang lebih dinamis, interaktif, dan user-friendly, berikut ini beberapa manfaat dari penggunaan JavaScript :
+- JavaScript dapat membantu mengubah isi, struktur, dan tampilan halaman web secara langsung tanpa harus reload halaman. Misalnya, menambahkan produk baru di web tanpa reload halaman atau pindah ke halaman lain.
+- JavaScript memudahkan halaman web untuk merespons aktivitas user secara real-time. Misalnya, ketika user mengisi formulir, JavaScript bisa memvalidasi data yang dimasukkan sebelum dikirim ke server serta menampilkan error message secara langsung.
+- JavaScript dapat mengubah tampilan elemen HTML secara langsung. Misalnya, jika user mengklik tombol, maka warna, ukuran, atau posisi elemen bisa diubah secara langsung.
+- JavaScript dapat digunakan untuk membuat, membaca, dan menghapus cookies di dalam browser. Hal ini juga dapat meningkatkan pengalaman user dengan mengingat preferensi user dari last login user tersebut.
+
+2. Jelaskan fungsi dari penggunaan await ketika kita menggunakan fetch()! Apa yang akan terjadi jika kita tidak menggunakan await?
+Fetch API merupakan standar baru untuk membuat request dengan Promise. Fungsi await digunakan untuk menunggu hasil dari request data yang dikirim oleh fetch(). Ketika menggunakan await, kode di bawahnya tidak akan dieksekusi sampai pengambilan data dari server melalui fetch() selesai. Setelah data sudah tersedia, kode di bawahnya akan dijalankan.
+
+Jika developer tidak menggunakan await, maka fetch() akan segera mengembalikan Promise tanpa menunggu hasilnya sehingga kode di bawahnya akan langsung dieksekusi sebelum data yang di-fetch siap. Ini bisa menyebabkan karena menggunakan data yang belum tersedia.
+
+3. Mengapa kita perlu menggunakan decorator csrf_exempt pada view yang akan digunakan untuk AJAX POST?
+Ketika menggunakan AJAX untuk mengirim data ke server, server mengharapkan adanya token CSRF (token yang dicek oleh Django setiap ada request POST ke server untuk mencegah serangan CSRF, yaitu Cross-Site Request Forgery). Tapi sering kali, menangani token CSRF bisa rumit karena perlu dipastikan bahwa token tersebut dikirim dengan benar. Maka dari itu, kita menggunakan csrf_exempt.
+
+csrf_exempt adalah sebuah decorator (fungsi khusus di Django) yang menonaktifkan pengecekan token CSRF di view tertentu. Ketika kita menambahkan @csrf_exempt di atas sebuah view, Django tidak akan memeriksa token CSRF untuk request POST yang datang ke view tersebut. Kita menggunakan ini untuk memudahkan pengembangan web karena tidak perlu menangani token CSRF.
+
+4. Pada tutorial PBP minggu ini, pembersihan data input pengguna dilakukan di belakang (backend) juga. Mengapa hal tersebut tidak dilakukan di frontend saja?
+Frontend tidak bisa dipercaya sepenuhnya sebab pengguna bisa memanipulasi aplikasi sehingga dapat membahayakan sistem. Oleh karena itu, backend harus melakukan pengecekan lagi untuk memastikan bahwa data yang masuk bersih dan aman.
+Alasan pembersihan di backend penting:
+- User dapat mematikan atau mengubah JavaScript di browser mereka, yang artinya pembersihan di frontend bisa diabaikan sehingga data berbahaya bisa masuk ke sistem.
+- Dengan melakukan pembersihan di backend, dapat dipastikan bahwa data yang dikirim sudah aman. Selain itu, data yang masuk ke database juga hanya data yang valid sehingga menjaga integritas data.
+
+5. Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial)!
+- AJAX GET
+Saya memindahkan proses pengambilan data dan penampilan data dari side rendering (langsung di halaman HTML) ke client-side rendering menggunakan AJAX dengan fetch() API.
+Pertama, saya menghapus baris product_entries = Product.objects.filter(user=request.user) dan 'product_entries': product_entries pada views.py. Lalu, saya mengubah baris pertama pada show_json dan show_xml menjadi data = Product.objects.filter(user=request.user). Kemudian, saya menghapus bagian block conditional product_entries untuk menampilkan card ketika kosong atau tidak, lalu saya ganti dengan <div id="product_entry_cards"></div>.
+Selanjutnya, saya membuat block <script> di bagian bawah sebelum {% endblock content %} dan membuat fungsi baru bernama getProductEntries() yang akan menggunakan fetch() API ke data JSON. Kemudian, saya membuat fungsi baru pada block yang sama dengan nama refreshMoodEntries() yang digunakan untuk me-refresh data moods secara asinkronus.
+- AJAX POST 
+(1) Buatlah sebuah tombol yang membuka sebuah modal dengan form untuk menambahkan mood.
+Pertama, pada main.html, saya menambahkan kode seperti di tutorial di bagian bawah div dengan id product_entry_cards, gunanya untuk mengimplementasikan modal (Tailwind) pada aplikasi. Selanjutnya, dalam block <script>, saya menambahkan fungsi-fungsi JavaScript, yaitu showModal() dan hideModal() agar modal dapat berfungsi. Kemudian, saya menambahkan tombol baru untuk melakukan penambahan data dengan AJAX.
+(2) Buatlah fungsi view baru untuk menambahkan mood baru ke dalam basis data. (3) Buatlah path /create-ajax/ yang mengarah ke fungsi view yang baru kamu buat.
+Pertama, saya mengimpor csrf_exempt dan require_POST dan membuat fungsi baru dengan nama add_product_entry_AJAX pada views.py. Fungsi ini tidak mengecek keberadaan token csrf dan hanya bisa diakses ketika user mengirimkan POST req. Kemudian saya menambahkan routing untuk fungsi tersebut pada urls.py dengan mendaftarkan path /create-ajax/ pada urlpatterns. 
+(4) Hubungkan form yang telah kamu buat di dalam modal kamu ke path /create-ajax/.
+Saya menambahkan fungsi baru pada block <script> di main.html dengan nama addProductEntry(). Di dalamnya, saya menghubungkan form pada modal dengan fungsi add_product_entry_ajax. Kemudian, saya menambahkan sebuah event listener pada form yang ada di modal untuk menjalankan fungsi addProductEntry(). Event listener ini menambahkan sebuah fungsi callback yang dipanggil ketika form di-submit.
+Selain itu, saya juga sudah memastikan untuk melindungi web dari serangan XSS dengan menambahkan strip_tags untuk membersihkan data baru serta menggunakan DOMPurify untuk membersihkan data di frontend.
